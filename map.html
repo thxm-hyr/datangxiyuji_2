@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《大唐西域记》数字人文可视化 - 玄奘西行路线图</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="styles-new.css">
+    
+    <!-- 字体 -->
+    <style>
+        @font-face {
+            font-family: 'YanZhenQin';
+            src: url('./fonts/yanzhenqin.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        .chinese-font {
+            font-family: 'YanZhenQin', 'SimSun', '宋体', serif;
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header class="header">
+        <div class="container">
+            <h1 class="title chinese-font">《大唐西域记》数字人文可视化</h1>
+            <p class="subtitle">玄奘法师西行路线交互地图</p>
+            <div class="controls">
+                <button id="toggleRoute" class="btn btn-primary">显示/隐藏路线</button>
+                <button id="toggleMarkers" class="btn btn-secondary">显示/隐藏标记</button>
+                <button id="resetView" class="btn btn-info">重置视图</button>
+                <a href="index.html" class="btn btn-back">返回首页</a>
+            </div>
+            <div class="layer-controls">
+                <button id="layerStreet" class="btn btn-layer active" data-layer="street">街道地图</button>
+                <button id="layerSatellite" class="btn btn-layer" data-layer="satellite">卫星图</button>
+                <button id="layerTerrain" class="btn btn-layer" data-layer="terrain">地形图</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="main">
+        <div class="container">
+            <div class="container-grid">
+                <!-- 地图容器 -->
+                <div id="map" class="map-container"></div>
+                
+                <!-- 侧边栏 -->
+                <aside class="sidebar">
+                    <div class="sidebar-header">
+                        <h3 class="chinese-font">玄奘西行路线</h3>
+                        <div class="route-info">
+                            <span id="routeLength">38个国家/城市</span>
+                            <span id="totalDistance">约12,000公里</span>
+                        </div>
+                    </div>
+                    
+                    <div class="country-list">
+                        <input type="text" id="searchCountry" placeholder="搜索国家/城市..." class="search-input">
+                        <div id="countryList" class="country-items">
+                            <!-- 国家列表将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- 详情模态框 -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="chinese-font"></h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="location-info">
+                    <h3>现代位置</h3>
+                    <p id="modernLocation"></p>
+                </div>
+                
+                <div class="images-section">
+                    <h3>相关图片</h3>
+                    <div id="imageGallery" class="image-gallery">
+                        <!-- 图片将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <h3>《大唐西域记》原文与翻译</h3>
+                    <div id="originalContent" class="original-content chinese-font">
+                        <!-- 原文和翻译内容将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 悬停卡片 -->
+    <div id="hoverCard" class="hover-card">
+        <div class="hover-card-content">
+            <h3 id="hoverTitle" class="chinese-font"></h3>
+            <p id="hoverLocation"></p>
+            <p id="hoverDescription"></p>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>基于唐代高僧玄奘所著《大唐西域记》的数字人文项目</p>
+            <p>数据来源：国家信息文件、原文分段、相关图片</p>
+        </div>
+    </footer>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- 自定义JavaScript -->
+    <script src="data.js"></script>
+    <script src="map-new.js"></script>
+    <script src="app-fixed.js"></script>
+</body>
+</html>

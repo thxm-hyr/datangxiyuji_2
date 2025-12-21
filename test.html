@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试页面 - 大唐西域记</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .warning { color: orange; }
+    </style>
+</head>
+<body>
+    <h1>《大唐西域记》网站功能测试</h1>
+    
+    <div class="test-section">
+        <h2>1. 样式文件测试</h2>
+        <p id="style-test">正在检查样式文件...</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. 数据文件测试</h2>
+        <p id="data-test">正在检查数据文件...</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. 地图文件测试</h2>
+        <p id="map-test">正在检查地图文件...</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. 应用文件测试</h2>
+        <p id="app-test">正在检查应用文件...</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>5. 原文文件测试</h2>
+        <p id="content-test">正在检查原文文件...</p>
+    </div>
+    
+    <script>
+        // 测试样式文件
+        fetch('styles-new.css')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('style-test').innerHTML = 
+                    '<span class="success">✓ 样式文件加载成功</span>';
+            })
+            .catch(error => {
+                document.getElementById('style-test').innerHTML = 
+                    '<span class="error">✗ 样式文件加载失败: ' + error + '</span>';
+            });
+        
+        // 测试数据文件
+        fetch('data.js')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('data-test').innerHTML = 
+                    '<span class="success">✓ 数据文件加载成功</span>';
+            })
+            .catch(error => {
+                document.getElementById('data-test').innerHTML = 
+                    '<span class="error">✗ 数据文件加载失败: ' + error + '</span>';
+            });
+        
+        // 测试地图文件
+        fetch('map-new.js')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('map-test').innerHTML = 
+                    '<span class="success">✓ 地图文件加载成功</span>';
+            })
+            .catch(error => {
+                document.getElementById('map-test').innerHTML = 
+                    '<span class="error">✗ 地图文件加载失败: ' + error + '</span>';
+            });
+        
+        // 测试应用文件
+        fetch('app-new.js')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('app-test').innerHTML = 
+                    '<span class="success">✓ 应用文件加载成功</span>';
+            })
+            .catch(error => {
+                document.getElementById('app-test').innerHTML = 
+                    '<span class="error">✗ 应用文件加载失败: ' + error + '</span>';
+            });
+        
+        // 测试原文文件
+        fetch('网页/原文分段/1阿耆尼国.txt')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('content-test').innerHTML = 
+                    '<span class="success">✓ 原文文件加载成功</span>';
+            })
+            .catch(error => {
+                document.getElementById('content-test').innerHTML = 
+                    '<span class="warning">⚠ 原文文件加载失败（可能路径问题）: ' + error + '</span>';
+            });
+    </script>
+</body>
+</html>
