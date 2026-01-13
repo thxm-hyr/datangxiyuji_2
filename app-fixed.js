@@ -437,11 +437,148 @@ function openImageModal(imageSrc) {
 }
 
 // 全局函数，供地图点击调用
+// 加载地点信息文件
+async function loadLocationInfo(countryName) {
+    console.log(`开始加载 ${countryName} 的地点信息文件...`);
+    
+    // 国家名称与地点信息文件名的映射
+    const countryLocationMap = {
+        '阿耆尼国': '1阿耆尼国信息.txt',
+        '屈支国': '2屈支国信息.txt', 
+        '跋禄迦国': '3跋禄迦国信息.txt',
+        '素叶水城': '4素叶水城信息.txt',
+        '呾逻私城': '5呾逻私城信息.txt',
+        '白水城': '6白水城信息.txt',
+        '恭御城': '7恭御城信息.txt',
+        '笯赤建国': '8笯赤建国信息.txt',
+        '赭时国': '9赭时国信息.txt',
+        '㤄捍国': '10㤄捍国信息.txt',
+        '窣堵利瑟那国': '11窣堵利瑟那国信息.txt',
+        '飒秣建国': '12飒秣建国信息.txt',
+        '弭秣贺国': '13弭秣贺国信息.txt',
+        '劫布呾那国': '14劫布呾那国信息.txt',
+        '屈霜你迦国': '15屈霜你迦国信息.txt',
+        '喝捍国': '16喝捍国信息.txt',
+        '捕喝国': '17捕喝国信息.txt',
+        '伐地国': '18伐地国信息.txt',
+        '货利习弥伽国': '19货利习弥伽国信息.txt',
+        '羯霜那国': '20羯霜那国信息.txt',
+        '睹货逻国': '21睹货逻国信息.txt',
+        '呾蜜国': '22呾蜜国信息.txt',
+        '赤鄂衍那国': '23赤鄂衍那国信息.txt',
+        '忽露摩国': '24忽露摩国信息.txt',
+        '愉漫国': '25愉漫国信息.txt',
+        '鞠和衍那国': '26鞠和衍那国信息.txt',
+        '镬沙国': '27镬沙国信息.txt',
+        '拘谜陀国': '28拘谜陀国信息.txt',
+        '䌸伽浪国': '29䌸伽浪国信息.txt',
+        '纥露悉泯健国': '30纥露悉泯健国信息.txt',
+        '忽懔国': '31忽懔国信息.txt',
+        '缚喝国': '32缚喝国信息.txt',
+        '锐秣陀国': '33锐秣陀国信息.txt',
+        '胡实健国': '34胡实健国信息.txt',
+        '呾剌健国': '35呾剌健国信息.txt',
+        '揭职国': '36揭职国信息.txt',
+        '梵衍那国': '37梵衍那国信息.txt',
+        '迦毕试国': '38迦毕试国信息.txt'
+    };
+    
+    const fileName = countryLocationMap[countryName];
+    if (!fileName) {
+        console.warn(`未找到 ${countryName} 的地点信息文件映射`);
+        return null;
+    }
+    
+    // 使用正确的相对路径
+    const filePath = `./网页/地点信息/${fileName}`;
+    console.log(`尝试加载文件: ${filePath}`);
+    
+    try {
+        const response = await fetch(filePath);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        const content = await response.text();
+        console.log(`成功加载 ${countryName} 的地点信息文件`);
+        return content;
+    } catch (error) {
+        console.error(`加载 ${countryName} 地点信息文件失败:`, error);
+        return null;
+    }
+}
+
+// 格式化地点信息内容
+function formatLocationInfo(content) {
+    if (!content) return '<p>地点信息加载失败</p>';
+    
+    // 按段落分割并格式化
+    const sections = content.split('\n\n');
+    let html = '';
+    
+    sections.forEach(section => {
+        if (section.trim()) {
+            // 检查是否是标题段落（包含数字和、等）
+            if (section.match(/^[一二三四五六七八九十]、/)) {
+                html += `<h4 style="color: #8b4513; margin: 1.5rem 0 0.5rem 0; border-bottom: 2px solid #d4bc8a; padding-bottom: 0.3rem;">${section}</h4>`;
+            } else {
+                html += `<p style="margin: 0.5rem 0; line-height: 1.6; text-indent: 2em;">${section}</p>`;
+            }
+        }
+    });
+    
+    return html;
+}
+
+// 修改showCountryDetail函数以包含地点信息
 function showCountryDetail(countryName) {
     if (window.tangApp) {
         window.tangApp.showCountryDetail(countryName);
     }
 }
+
+// 为TangWesternRegionApp类添加地点信息功能
+TangWesternRegionApp.prototype.loadAndShowLocationInfo = async function(countryName) {
+    const locationContent = await loadLocationInfo(countryName);
+    const formattedContent = formatLocationInfo(locationContent);
+    
+    // 在详情模态框中添加地点信息部分
+    const modalBody = document.querySelector('.modal-body');
+    if (modalBody) {
+        // 查找或创建地点信息部分
+        let locationSection = modalBody.querySelector('.location-details-section');
+        if (!locationSection) {
+            locationSection = document.createElement('div');
+            locationSection.className = 'location-details-section';
+            locationSection.innerHTML = `
+                <h3>地点详细信息</h3>
+                <div class="location-content" style="max-height: 300px; overflow-y: auto; background: #fff5e6; padding: 1rem; border-radius: 8px; border: 2px solid #d4bc8a;">
+                    ${formattedContent}
+                </div>
+            `;
+            
+            // 插入到现代位置信息之后
+            const locationInfo = modalBody.querySelector('.location-info');
+            if (locationInfo) {
+                locationInfo.parentNode.insertBefore(locationSection, locationInfo.nextSibling);
+            }
+        } else {
+            // 更新现有内容
+            const locationContentDiv = locationSection.querySelector('.location-content');
+            if (locationContentDiv) {
+                locationContentDiv.innerHTML = formattedContent;
+            }
+        }
+    }
+};
+
+// 修改原有的showCountryDetail方法以包含地点信息
+const originalShowCountryDetail = TangWesternRegionApp.prototype.showCountryDetail;
+TangWesternRegionApp.prototype.showCountryDetail = async function(countryName) {
+    // 先调用原始方法
+    await originalShowCountryDetail.call(this, countryName);
+    
+    // 然后加载并显示地点信息
+    await this.loadAndShowLocationInfo(countryName);
+};
 
 // 初始化应用
 document.addEventListener('DOMContentLoaded', function() {
